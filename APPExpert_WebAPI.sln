@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APPExpert_WebAPI", "APPExpert_WebAPI.csproj", "{ABDC4A76-386D-403E-B32A-6A550FFA9E52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABDC4A76-386D-403E-B32A-6A550FFA9E52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABDC4A76-386D-403E-B32A-6A550FFA9E52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABDC4A76-386D-403E-B32A-6A550FFA9E52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABDC4A76-386D-403E-B32A-6A550FFA9E52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {04BECCAC-9981-4696-9F7C-B42E04A1C533}
+	EndGlobalSection
+EndGlobal
