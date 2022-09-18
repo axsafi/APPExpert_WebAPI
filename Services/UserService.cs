@@ -27,37 +27,36 @@ namespace APPExpert_WebAPI.Services
     public class UserService : IUserService
     {
         private DataContext _context;
+        private DBContext _dbcontext;
         private readonly AppSettings _appSettings;
 
-        public UserService(
-            DataContext context,
-            IOptions<AppSettings> appSettings)
+        public UserService(DataContext context, DBContext DBcontext, IOptions<AppSettings> appSettings)
         {
             _context = context;
+            _dbcontext = DBcontext;
             _appSettings = appSettings.Value;
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
         {
-            var user =  _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+            var user = _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
 
             var Username = new SqlParameter("@Username", "admin");
             var Password = new SqlParameter("@Password", "admin");
 
-            var users = _context
+            var users = _dbcontext
                         .UserMaster
                         .FromSqlRaw("exec SpAPP_GetUser @Username, @Password", Username, Password)
-                        .ToList();
+                        .ToList().SingleOrDefault();
 
             //var users = _context.UserMaster.SingleOrDefault(x => x.UserName == "admin" && x.Password == "admin");
 
             // return null if user not found
-            if (user == null) return null;
+            if (user == null)
+            {
+                return null;
+            }
 
-            user.FirstName = users[0].FullName;
-            user.Username = users[0].UserName;
-            user.Password = users[0].Password;
-            user.Id = users[0].Id;
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = generateJwtToken(user);
             var refreshToken = generateRefreshToken(ipAddress);
@@ -73,7 +72,7 @@ namespace APPExpert_WebAPI.Services
         public AuthenticateResponse RefreshToken(string token, string ipAddress)
         {
             var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
-            
+
             // return null if no user found with token
             if (user == null) return null;
 
@@ -100,7 +99,7 @@ namespace APPExpert_WebAPI.Services
         public bool RevokeToken(string token, string ipAddress)
         {
             var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
-            
+
             // return false if no user found with token
             if (user == null) return false;
 
@@ -136,7 +135,7 @@ namespace APPExpert_WebAPI.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[] 
+                Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(ClaimTypes.Name, user.Id.ToString())
                 }),
@@ -149,7 +148,7 @@ namespace APPExpert_WebAPI.Services
 
         private RefreshToken generateRefreshToken(string ipAddress)
         {
-            using(var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
+            using (var rngCryptoServiceProvider = new RNGCryptoServiceProvider())
             {
                 var randomBytes = new byte[64];
                 rngCryptoServiceProvider.GetBytes(randomBytes);

@@ -7,39 +7,50 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APPExpert_WebAPI.Entities;
 using APPExpert_WebAPI.Helpers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Data.SqlClient;
 
 namespace APPExpert_WebAPI.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class SecuredController : ControllerBase
     {
-        private readonly DataContext _context;
+        private readonly DBContext _dbcontext;
 
-        public SecuredController(DataContext context)
+        public SecuredController(DBContext context)
         {
-            _context = context;
+            _dbcontext = context;
         }
 
         // GET: api/Secured
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserMaster>>> GetUserMaster()
         {
-            return await _context.UserMaster.ToListAsync();
+            return await _dbcontext.UserMaster.ToListAsync();
         }
 
         // GET: api/Secured/5
         [HttpGet("{id}")]
         public async Task<ActionResult<UserMaster>> GetUserMaster(int id)
         {
-            var userMaster = await _context.UserMaster.FindAsync(id);
+            var Username = new SqlParameter("@Username", "admin");
+            var Password = new SqlParameter("@Password", "admin");
 
-            if (userMaster == null)
+            var users = _dbcontext
+                        .UserMaster
+                        .FromSqlRaw("exec SpAPP_GetUser @Username, @Password", Username, Password)
+                        .ToList().SingleOrDefault();
+
+            var userMaster = await _dbcontext.UserMaster.FindAsync(id);
+
+            if (users == null)
             {
                 return NotFound();
             }
 
-            return userMaster;
+            return users;
         }
 
         // PUT: api/Secured/5
@@ -53,11 +64,11 @@ namespace APPExpert_WebAPI.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(userMaster).State = EntityState.Modified;
+            _dbcontext.Entry(userMaster).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _dbcontext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -80,8 +91,8 @@ namespace APPExpert_WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<UserMaster>> PostUserMaster(UserMaster userMaster)
         {
-            _context.UserMaster.Add(userMaster);
-            await _context.SaveChangesAsync();
+            _dbcontext.UserMaster.Add(userMaster);
+            await _dbcontext.SaveChangesAsync();
 
             return CreatedAtAction("GetUserMaster", new { id = userMaster.Id }, userMaster);
         }
@@ -90,21 +101,21 @@ namespace APPExpert_WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<UserMaster>> DeleteUserMaster(int id)
         {
-            var userMaster = await _context.UserMaster.FindAsync(id);
+            var userMaster = await _dbcontext.UserMaster.FindAsync(id);
             if (userMaster == null)
             {
                 return NotFound();
             }
 
-            _context.UserMaster.Remove(userMaster);
-            await _context.SaveChangesAsync();
+            _dbcontext.UserMaster.Remove(userMaster);
+            await _dbcontext.SaveChangesAsync();
 
             return userMaster;
         }
 
         private bool UserMasterExists(int id)
         {
-            return _context.UserMaster.Any(e => e.Id == id);
+            return _dbcontext.UserMaster.Any(e => e.Id == id);
         }
     }
 }

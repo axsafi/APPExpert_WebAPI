@@ -20,10 +20,11 @@ namespace APPExpert_WebAPI.Entities
     public class UserMaster
     {
         public int Id { get; set; }
+        public string FullName { get; set; }
         public string UserName { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
-        public string FullName { get; set; }
+
 
         //[JsonIgnore]
         //public List<RefreshToken> RefreshTokens { get; set; }

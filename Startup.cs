@@ -29,17 +29,18 @@ namespace APPExpert_WebAPI
         {
 
             // in memory database used for simplicity, change to a real db for production applications
-            //services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TIPPER_DEV"));
+            services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("DEV"));
             ////Configure DBContext With SQLServer
-            services.AddDbContext<DataContext>(x => x.UseSqlServer(ConnectionString));
+            services.AddDbContext<DBContext>(x => x.UseSqlServer(ConnectionString));
 
             services.AddCors();
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
 
             // Register SQL database configuration context as services. // normal style (until .NET 5)
-            services.AddDbContext<DataContext>(options => {
+            services.AddDbContext<DBContext>(options => {
                 options.UseSqlServer(Configuration.GetConnectionString(ConnectionString));
             });
+            
             ////Configure DBContext With SQLServer
             //services.AddDbContext<DataContext>(x => x.UseSqlServer(ConnectionString));
 
@@ -81,8 +82,8 @@ namespace APPExpert_WebAPI
         {
             // add hardcoded test user to db on startup
             // plain text password is used for simplicity, hashed passwords should be used in production applications
-            //context.Users.Add(new User { FirstName = "Test", LastName = "User", Username = "test", Password = "test" });
-            //context.SaveChanges();
+            context.Users.Add(new User { FirstName = "Admin", LastName = "APP_EXPERT", Username = "Admin", Password = "Admin" });
+            context.SaveChanges();
 
             app.UseHttpsRedirection();
             app.UseRouting();
