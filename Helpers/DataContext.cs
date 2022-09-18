@@ -5,8 +5,11 @@ namespace APPExpert_WebAPI.Helpers
 {
     public class DataContext : DbContext
     {
-        public DbSet<User> Users { get; set; }
+        public DataContext(DbContextOptions<DataContext> options) : base(options)
+        {
 
-        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+        }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserMaster> UserMaster { get; set; }
     }
 }

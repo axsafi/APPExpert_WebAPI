@@ -10,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using APPExpert_WebAPI.Models;
 using APPExpert_WebAPI.Entities;
 using APPExpert_WebAPI.Helpers;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace APPExpert_WebAPI.Services
 {
@@ -39,9 +41,23 @@ namespace APPExpert_WebAPI.Services
         {
             var user =  _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
 
+            var Username = new SqlParameter("@Username", "admin");
+            var Password = new SqlParameter("@Password", "admin");
+
+            var users = _context
+                        .UserMaster
+                        .FromSqlRaw("exec SpAPP_GetUser @Username, @Password", Username, Password)
+                        .ToList();
+
+            //var users = _context.UserMaster.SingleOrDefault(x => x.UserName == "admin" && x.Password == "admin");
+
             // return null if user not found
             if (user == null) return null;
 
+            user.FirstName = users[0].FullName;
+            user.Username = users[0].UserName;
+            user.Password = users[0].Password;
+            user.Id = users[0].Id;
             // authentication successful so generate jwt and refresh tokens
             var jwtToken = generateJwtToken(user);
             var refreshToken = generateRefreshToken(ipAddress);

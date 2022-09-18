@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Sheik\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj": {}
+    "E:\\Sheik\\Repo\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj": {}
   },
   "projects": {
-    "E:\\Sheik\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj": {
+    "E:\\Sheik\\Repo\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Sheik\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj",
+        "projectUniqueName": "E:\\Sheik\\Repo\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj",
         "projectName": "APPExpert_WebAPI",
-        "projectPath": "E:\\Sheik\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj",
+        "projectPath": "E:\\Sheik\\Repo\\APPExpert_WebAPI\\APPExpert_WebAPI.csproj",
         "packagesPath": "C:\\Users\\mit1259\\.nuget\\packages\\",
-        "outputPath": "E:\\Sheik\\APPExpert_WebAPI\\obj\\",
+        "outputPath": "E:\\Sheik\\Repo\\APPExpert_WebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -48,6 +48,24 @@
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[3.1.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.1.25, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[3.1.25, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[3.1.25, )"
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[3.1.5, )"
             },
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",

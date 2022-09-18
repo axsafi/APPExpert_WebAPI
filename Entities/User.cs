@@ -16,4 +16,16 @@ namespace APPExpert_WebAPI.Entities
         [JsonIgnore]
         public List<RefreshToken> RefreshTokens { get; set; }
     }
+
+    public class UserMaster
+    {
+        public int Id { get; set; }
+        public string UserName { get; set; }
+        [JsonIgnore]
+        public string Password { get; set; }
+        public string FullName { get; set; }
+
+        //[JsonIgnore]
+        //public List<RefreshToken> RefreshTokens { get; set; }
+    }
 }

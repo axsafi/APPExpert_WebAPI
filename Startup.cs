@@ -15,9 +15,11 @@ namespace APPExpert_WebAPI
 {
     public class Startup
     {
+        public string ConnectionString { get; set; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            ConnectionString = Configuration.GetConnectionString("DefaultConnectionStrings");
         }
 
         public IConfiguration Configuration { get; }
@@ -25,11 +27,21 @@ namespace APPExpert_WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             // in memory database used for simplicity, change to a real db for production applications
-            services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
+            //services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TIPPER_DEV"));
+            ////Configure DBContext With SQLServer
+            services.AddDbContext<DataContext>(x => x.UseSqlServer(ConnectionString));
 
             services.AddCors();
             services.AddControllers().AddJsonOptions(x => x.JsonSerializerOptions.IgnoreNullValues = true);
+
+            // Register SQL database configuration context as services. // normal style (until .NET 5)
+            services.AddDbContext<DataContext>(options => {
+                options.UseSqlServer(Configuration.GetConnectionString(ConnectionString));
+            });
+            ////Configure DBContext With SQLServer
+            //services.AddDbContext<DataContext>(x => x.UseSqlServer(ConnectionString));
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -61,6 +73,7 @@ namespace APPExpert_WebAPI
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISecureService, SecureService>();
+            services.AddScoped<ISecuredService, SecuredService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,9 +81,10 @@ namespace APPExpert_WebAPI
         {
             // add hardcoded test user to db on startup
             // plain text password is used for simplicity, hashed passwords should be used in production applications
-            context.Users.Add(new User { FirstName = "Test", LastName = "User", Username = "test", Password = "test" });
-            context.SaveChanges();
+            //context.Users.Add(new User { FirstName = "Test", LastName = "User", Username = "test", Password = "test" });
+            //context.SaveChanges();
 
+            app.UseHttpsRedirection();
             app.UseRouting();
 
             // global cors policy
