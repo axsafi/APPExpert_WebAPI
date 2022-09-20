@@ -11,6 +11,7 @@ namespace APPExpert_WebAPI.Helpers
         }
         public DbSet<User> Users { get; set; }
         public DbSet<UserMaster> UserMaster { get; set; }
+        public DbSet<Security_UserMaster> Security_UserMaster { get; set; }
     }
 
     public class DBContext : DbContext
@@ -20,5 +21,6 @@ namespace APPExpert_WebAPI.Helpers
 
         }
         public DbSet<UserMaster> UserMaster { get; set; }
+        public DbSet<Security_UserMaster> Security_UserMaster { get; set; }
     }
 }
